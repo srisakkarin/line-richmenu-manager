@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { TokenForm } from '@/components/token-form';
 import { RichMenuList } from '@/components/richmenu-list';
 import { RichMenuBuilder } from '@/components/richmenu-builder';
-import { RichMenuPreview } from '@/components/richmenu-preview';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -14,9 +13,8 @@ export default function HomePage() {
   const [token, setToken] = useState<string | null>(null);
   const [menus, setMenus] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [config, setConfig] = useState<any>(null);
-  const [imageFile, setImageFile] = useState<File | null>(null);
 
+  // ฟังก์ชันโหลดรายการเมนู
   const fetchMenus = async () => {
     if (!token) return;
     setLoading(true);
@@ -37,34 +35,6 @@ export default function HomePage() {
   useEffect(() => {
     if (token) fetchMenus();
   }, [token]);
-
-  const handleCreate = async () => {
-    if (!token || !imageFile || !config) {
-      toast.error('Please complete all steps');
-      return;
-    }
-    try {
-      const formData = new FormData();
-      formData.append('json', JSON.stringify(config));
-      formData.append('image', imageFile);
-
-      const res = await fetch('/api/create', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
-
-      if (res.ok) {
-        toast.success('Rich menu created and applied to all users!');
-        fetchMenus();
-      } else {
-        const err = await res.json();
-        toast.error(err.error || 'Failed to create');
-      }
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  };
 
   return (
     <div className="container mx-auto py-8 space-y-8 w-full">
@@ -90,18 +60,8 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <RichMenuBuilder onConfigChange={setConfig} imageFile={imageFile} />
-            <RichMenuPreview imageFile={imageFile} onImageChange={setImageFile} />
-          </div>
-
-          <Button
-            onClick={handleCreate}
-            className="w-full"
-            disabled={!config || !imageFile}
-          >
-            Create & Apply to All Users
-          </Button>
+          {/* เรียกใช้ Builder โดยส่ง token และฟังก์ชัน refresh ไปให้ */}
+          <RichMenuBuilder token={token} onSuccess={fetchMenus} />
         </div>
       )}
     </div>
