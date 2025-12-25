@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  web:
+    container_name: "line-richmenu-manager"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "11210:11210"
+    restart: always
+    environment:
+      - NODE_ENV=production
