@@ -31,11 +31,7 @@ import {
     MessageSquare,
     Webhook
 } from "lucide-react";
-
-// Interface
-interface ExtendedTemplate extends Template {
-    image?: string;
-}
+ 
 
 interface RichMenuBuilderProps {
     token: string | null;
@@ -56,8 +52,8 @@ export function RichMenuBuilder({ token, onSuccess }: RichMenuBuilderProps) {
     };
 
     // --- State ---
-    const templates = TEMPLATES as ExtendedTemplate[];
-    const [selectedTemplate, setSelectedTemplate] = useState<ExtendedTemplate>(templates[0]);
+    const templates = TEMPLATES as Template[];
+    const [selectedTemplate, setSelectedTemplate] = useState<Template>(templates[0]);
 
     // ใช้ normalizeAreas ตั้งแต่เริ่มต้น เพื่อกันพลาดกรณี Template ไฟล์เขียนมาไม่เหมือนกัน
     const [areas, setAreas] = useState<any[]>(normalizeAreas(templates[0].areas || []));
@@ -85,7 +81,7 @@ export function RichMenuBuilder({ token, onSuccess }: RichMenuBuilderProps) {
 
     // --- Handlers ---
 
-    const handleSelectTemplate = (template: ExtendedTemplate) => {
+    const handleSelectTemplate = (template: Template) => {
         setSelectedTemplate(template);
         // Reset Action แต่ยังคงพิกัดไว้ และ Normalize ให้ชัวร์
         const resetAreas = template.areas.map(a => ({ ...a, action: { type: 'uri', uri: '' } }));
