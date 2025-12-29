@@ -11,8 +11,8 @@ export type Template = {
     width: number;
     height: number;
     action: { type: 'uri' | 'message' | 'postback'; uri?: string; text?: string; data?: string };
-    image : string;
   }>;
+  image : string;
 };
 
 export const TEMPLATES: Template[] = [
